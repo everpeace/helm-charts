@@ -1,3 +1,12 @@
 apiVersion: v1
-entries: {}
-generated: 2017-07-04T22:10:19.551618781+09:00
+entries:
+  kafka-producer-perf-test:
+  - apiVersion: v1
+    created: 2017-07-05T00:49:19.668802002+09:00
+    description: A Helm chart for kafka-producer-perf-test
+    digest: 119614f71342242359654ac0b157579f709f6aae259ca7a76f9d1e01b5f8ae51
+    name: kafka-producer-perf-test
+    urls:
+    - https://everpeace.github.io/helm-charts/kafka-producer-perf-test-0.1.0.tgz
+    version: 0.1.0
+generated: 2017-07-05T00:49:19.667119274+09:00

@@ -1,0 +1,96 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ template "fullname" . }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{if .Values.image.registry}}{{.Values.image.registry}}/{{end}}{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: jmx-port
+          containerPort: {{ .Values.jmxPort }}
+        env:
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: COMPONENT
+          value: "kafka-consumer-perf-test"
+        - name: JMX_PORT
+          value: {{ .Values.jmxPort | quote }}
+        - name: KAFKA_OPTS
+          value: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.rmi.port={{.Values.jmxPort}}"
+        command:
+        - sh
+        - -c
+        - |
+          set -x
+          CONFDIR=/opt/kafka-consumer-perf-test/conf
+          cp $CONFDIR/consumer.config /tmp/consumer.config
+          if ! grep 'client.id=' /tmp/consumer.config > /dev/null; then
+            echo "client.id=${MY_POD_NAME}" >> /tmp/consumer.config
+          fi
+          kafka-consumer-perf-test --new-consumer --show-detailed-stats \
+            --topic $(cat $CONFDIR/topic) \
+            --broker-list $(cat $CONFDIR/broker-list) \
+            --consumer.config /tmp/consumer.config \
+            --batch-size $(cat $CONFDIR/batch-size) \
+            --fetch-size $(cat $CONFDIR/fetch-size) \
+            --messages  $(cat $CONFDIR/messages)  \
+            --num-fetch-threads $(cat $CONFDIR/num-fetch-threads) \
+            --reporting-interval $(cat $CONFDIR/reporting-interval)
+        volumeMounts:
+        - mountPath: /opt/kafka-consumer-perf-test/conf
+          name: config-volume
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      - name: collocated-proxy
+        image: "{{if .Values.collocatedProxy.image.registry}}{{.Values.collocatedProxy.image.registry}}/{{end}}{{.Values.collocatedProxy.image.repository}}:{{.Values.collocatedProxy.image.tag}}"
+        imagePullPolicy: {{.Values.collocatedProxy.image.pullPolicy}}
+        ports:
+        - containerPort: {{.Values.collocatedProxy.port}}
+          protocol: UDP
+        env:
+        - name: PORT
+          value: {{.Values.collocatedProxy.port | quote}}
+        - name: SELECTOR
+          value: "{{.Values.collocatedProxy.selector}}"
+        - name: PROTOCOL
+          value: udp
+        - name: NAMESPACE
+          value: {{.Values.collocatedProxy.namespace}}
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      - name: jmxfetcher
+        image: "{{if .Values.jmxfetch.image.registry}}{{.Values.jmxfetch.image.registry}}/{{end}}{{.Values.jmxfetch.image.repository}}:{{.Values.jmxfetch.image.tag}}"
+        imagePullPolicy: {{.Values.jmxfetch.image.pullPolicy}}
+        volumeMounts:
+        - mountPath: /conf.d
+          name: config-volume
+        env:
+        - name: DD_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: datadog.api.key

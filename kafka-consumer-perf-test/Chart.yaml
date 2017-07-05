@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for kafka-consumer-perf-test
+name: kafka-consumer-perf-test
+version: 0.1.0

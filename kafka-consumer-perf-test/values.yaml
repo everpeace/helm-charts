@@ -35,12 +35,13 @@ collocatedProxy:
   port: "8125"
   namespace: kube-system
   selector: "app=dd-agent-datadog"
+datadog:
+  apiKey: ""
 jmxfetch:
   image:
     repository: everpeace/jmxfetch
     tag: latest
     pullPolicy: IfNotPresent
-  datadogApiKey: ""
   config:
     kafka.yaml: |
       instances:

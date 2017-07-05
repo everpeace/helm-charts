@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Helm chart for burrow
+name: burrow
+version: 0.1.0

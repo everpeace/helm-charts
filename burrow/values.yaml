@@ -1,0 +1,78 @@
+# Default values for burrow.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: magnetme/burrow
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  name: burrow
+  type: NodePort
+  externalPort: 80
+  internalPort: 8000
+  nodePort: 30000
+resources:
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+config:
+  burrow.cfg: |
+    [general]
+    logconfig=/etc/burrow/logging.cfg
+    group-blacklist=^(console-consumer-|python-kafka-consumer-).*$
+
+    [zookeeper]
+    hostname=zookeeper
+    port=2181
+    timeout=6
+    lock-path=/burrow/notifier
+
+    [kafka "local"]
+    broker=kafka
+    broker-port=9092
+    offsets-topic=__consumer_offsets
+    zookeeper=zookeeper
+    zookeeper-path=/local
+    zookeeper-offsets=true
+    offsets-topic=__consumer_offsets
+
+    [tickers]
+    broker-offsets=60
+
+    [lagcheck]
+    intervals=10
+    expire-group=604800
+
+    [httpserver]
+    server=on
+    port=8000
+  logging.cfg: |
+    <seelog minlevel="debug">
+      <outputs formatid="main">
+        <rollingfile type="date" filename="/var/tmp/burrow/burrow.log" datepattern="2006-01-02" maxrolls="7" />
+      </outputs>
+      <formats>
+        <format id="main" format="%Date(2006-01-02 15:04:05) [%LEVEL] %Msg%n"/>
+      </formats>
+    </seelog>
+datadog:
+  enabled: true
+  apiKey: ""
+  image:
+    repository: everpeace/docker-dd-agent-no-checks
+    tag: latest
+    pullPolicy: Always
+    resources:
+      # requests:
+      #   memory: "128Mi"
+      #   cpu: "100m"
+      # limits:
+      #   memory: "512Mi"
+      #   cpu: "250m"
+  checks_d:
+    clusters:
+    - local

@@ -1,0 +1,81 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      volumes:
+      - name: burrow-config-volume
+        configMap:
+          name: "{{ template "fullname" . }}-burrow"
+{{if .Values.datadog.enabled}}
+      - name: dd-agent-checks-volume
+        configMap:
+          name: "{{ template "fullname" . }}-dd-check"
+      - name: dd-agent-conf-volume
+        configMap:
+          name: "{{ template "fullname" . }}-dd-conf"
+      - hostPath:
+          path: /var/run/docker.sock
+        name: dockersocket
+      - hostPath:
+          path: /proc
+        name: procdir
+      - hostPath:
+          path: /sys/fs/cgroup
+        name: cgroups
+{{end}}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        volumeMounts:
+        - mountPath: /etc/burrow
+          name: burrow-config-volume
+        command:
+        - sh
+        - -c
+        - |
+          set -x
+          echo "--- /etc/burrow/burrow.cfg ---"
+          cat /etc/burrow/burrow.cfg
+          echo "------------------------------"
+          /go/bin/burrow --config /etc/burrow/burrow.cfg
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+{{if .Values.datadog.enabled}}
+      - name: dd-agent
+        image: "{{ .Values.datadog.image.repository }}:{{ .Values.datadog.image.tag }}"
+        imagePullPolicy: {{ .Values.datadog.image.pullPolicy }}
+        env:
+        - name: DD_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: datadog.api.key
+        - name: USE_DOGSTATSD
+          value: "no"
+        volumeMounts:
+          - name: dockersocket
+            mountPath: /var/run/docker.sock
+          - name: procdir
+            mountPath: /host/proc
+            readOnly: true
+          - name: cgroups
+            mountPath: /host/sys/fs/cgroup
+            readOnly: true
+          - name: dd-agent-checks-volume
+            mountPath: /checks.d
+          - name: dd-agent-conf-volume
+            mountPath: /conf.d
+{{end}}

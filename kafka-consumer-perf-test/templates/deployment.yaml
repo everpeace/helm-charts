@@ -45,9 +45,13 @@ spec:
           if ! grep 'client.id=' /tmp/consumer.config > /dev/null; then
             echo "client.id=${MY_POD_NAME}" >> /tmp/consumer.config
           fi
+          if ! grep 'group.id=' /tmp/consumer.config > /dev/null; then
+            echo "group.id=$(cat $CONFDIR/group)" >> /tmp/consumer.config
+          fi
           kafka-consumer-perf-test --new-consumer --show-detailed-stats \
             --topic $(cat $CONFDIR/topic) \
             --broker-list $(cat $CONFDIR/broker-list) \
+            --group $(cat $CONFDIR/group) \
             --consumer.config /tmp/consumer.config \
             --batch-size $(cat $CONFDIR/batch-size) \
             --fetch-size $(cat $CONFDIR/fetch-size) \

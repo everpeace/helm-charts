@@ -16,8 +16,8 @@ resources:
 jmxPort: "8999"
 config:
   topic: ""
-  broker-list: ""
-  # broker-list: kafka1:9092,kafka2:9092,kafka2:9092
+  broker-list: "" # "kafka1:9092,kafka2:9092,kafka2:9092"
+  group: consumer-perf-test # This should be equal to tags value in kafka.yaml below.
   batch-size: "200"
   fetch-size: "1048576"
   messages: "1000000000"
@@ -25,7 +25,6 @@ config:
   reporting-interval: "5000"
   consumer.config: ""
   # consumer.config: |
-  #   group.id=consumer-perf-test
   #   exclude.internal.topics=true
   #   enable.auto.commit=true
 collocatedProxy:

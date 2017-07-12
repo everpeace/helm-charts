@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: kafka-consumer
+        release: {{ .Release.Name | quote }}
     spec:
       volumes:
       - name: config-volume

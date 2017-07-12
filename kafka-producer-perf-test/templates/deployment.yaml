@@ -12,6 +12,8 @@ spec:
     metadata:
       labels:
         app: kafka-producer
+        release: {{ .Release.Name | quote }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     spec:
       volumes:
       - name: config-volume

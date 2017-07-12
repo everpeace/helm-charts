@@ -13,6 +13,7 @@ spec:
       labels:
         app: kafka-consumer
         release: {{ .Release.Name | quote }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     spec:
       volumes:
       - name: config-volume
@@ -36,6 +37,8 @@ spec:
           value: {{ .Values.jmxPort | quote }}
         - name: KAFKA_OPTS
           value: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.rmi.port={{.Values.jmxPort}}"
+        - name: KAFKA_HEAP_OPTS
+          value: {{.Values.heapOpts}}
         command:
         - sh
         - -c

@@ -14,6 +14,7 @@ resources:
   #   cpu: 100m
   #   memory: 128Mi
 jmxPort: "8999"
+heapOpts: "-Xmx512M"
 config:
   topic: ""
   num-records: "2147483647"

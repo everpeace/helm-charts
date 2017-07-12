@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   burrow:
   - apiVersion: v1
-    created: 2017-07-06T02:21:31.080527294+09:00
+    created: 2017-07-12T15:08:39.138862714+09:00
     description: A Helm chart for burrow
     digest: e7726db462a62ba44116917d876d578e413ebff398b6c344213b3ff6033e65f3
     name: burrow
@@ -11,20 +11,20 @@ entries:
     version: 0.1.0
   kafka-consumer-perf-test:
   - apiVersion: v1
-    created: 2017-07-06T02:21:31.081631204+09:00
+    created: 2017-07-12T15:08:39.140095241+09:00
     description: A Helm chart for kafka-consumer-perf-test
-    digest: e9254d08527e0af2fd3de289e1f29f09fbf93e424ffd167f4dc6de8d02de650b
+    digest: dcb725527dc8aea4c0f70c66764d36d48dec79b7bf33116ed14a7e8a18c9ffa2
     name: kafka-consumer-perf-test
     urls:
     - https://everpeace.github.io/helm-charts/kafka-consumer-perf-test-0.1.0.tgz
     version: 0.1.0
   kafka-producer-perf-test:
   - apiVersion: v1
-    created: 2017-07-06T02:21:31.083390467+09:00
+    created: 2017-07-12T15:08:39.141584342+09:00
     description: A Helm chart for kafka-producer-perf-test
-    digest: 63a73e9c160668fc57e92a229c5fa8e3e21827f192d79505a324a90217e85ab3
+    digest: 439295c14934b630bff72c0163123dee7356d15992b2a9c639ce800d96d0bd14
     name: kafka-producer-perf-test
     urls:
     - https://everpeace.github.io/helm-charts/kafka-producer-perf-test-0.1.0.tgz
     version: 0.1.0
-generated: 2017-07-06T02:21:31.079224197+09:00
+generated: 2017-07-12T15:08:39.13731847+09:00

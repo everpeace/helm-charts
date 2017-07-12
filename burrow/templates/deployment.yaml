@@ -10,7 +10,9 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+        app: burrow
+        release: {{ .Release.Name | quote }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     spec:
       volumes:
       - name: burrow-config-volume

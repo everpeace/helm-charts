@@ -34,6 +34,7 @@ collocatedProxy:
 datadog:
   apiKey: ""
 jmxfetch:
+  enabled: true
   image:
     repository: everpeace/jmxfetch
     tag: latest

@@ -50,6 +50,7 @@ spec:
           name: config-volume
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+{{if .Values.jmxfetch.enabled}}
       - name: collocated-proxy
         image: "{{if .Values.collocatedProxy.image.registry}}{{.Values.collocatedProxy.image.registry}}/{{end}}{{.Values.collocatedProxy.image.repository}}:{{.Values.collocatedProxy.image.tag}}"
         imagePullPolicy: {{.Values.collocatedProxy.image.pullPolicy}}
@@ -85,3 +86,4 @@ spec:
             secretKeyRef:
               name: {{ template "fullname" . }}
               key: datadog.api.key
+{{end}}

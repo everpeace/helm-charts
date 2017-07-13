@@ -43,7 +43,8 @@ spec:
             --num-records $(cat $CONFDIR/num-records) \
             --record-size $(cat $CONFDIR/record-size) \
             --throughput $(cat $CONFDIR/throughput) \
-            --producer-props $(cat $CONFDIR/producer-props)
+            --producer-props $(cat $CONFDIR/producer-props) \
+            $(cat $CONFDIR/extra-opts)
         volumeMounts:
         - mountPath: /opt/kafka-producer-perf-test/conf
           name: config-volume

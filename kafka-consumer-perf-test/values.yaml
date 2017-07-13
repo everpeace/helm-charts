@@ -16,6 +16,7 @@ resources:
 jmxPort: "8999"
 heapOpts: "-Xmx512M"
 config:
+  extra-opts: ""  # e.g. --from-latest
   topic: ""
   broker-list: "" # "kafka1:9092,kafka2:9092,kafka2:9092"
   group: consumer-perf-test # This should be equal to tags value in kafka.yaml below.

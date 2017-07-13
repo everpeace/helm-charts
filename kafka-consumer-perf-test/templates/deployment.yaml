@@ -61,7 +61,8 @@ spec:
             --fetch-size $(cat $CONFDIR/fetch-size) \
             --messages  $(cat $CONFDIR/messages)  \
             --num-fetch-threads $(cat $CONFDIR/num-fetch-threads) \
-            --reporting-interval $(cat $CONFDIR/reporting-interval)
+            --reporting-interval $(cat $CONFDIR/reporting-interval) \
+            $(cat $CONFDIR/extra-opts)
         volumeMounts:
         - mountPath: /opt/kafka-consumer-perf-test/conf
           name: config-volume

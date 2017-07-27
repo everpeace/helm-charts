@@ -1,0 +1,132 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+        release: {{ .Release.Name | quote }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    spec:
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ template "fullname" . }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{if .Values.image.registry}}{{.Values.image.registry}}/{{end}}{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: jmx-port
+          containerPort: 8999
+        env:
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: JVM_HEAP_MIN
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: jvm-heap-min
+        - name: JVM_HEAP_MAX
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: jvm-heap-max
+        - name: JVM_META_MAX
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: jvm-meta-max
+        - name: JVM_GC_OPTIONS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: jvm-gc-options
+        - name: THROTTABLE_PERF_CONSUMER_BOOTSTRAP_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: bootstrap-servers
+        - name: THROTTABLE_PERF_CONSUMER_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: topic
+        - name: THROTTABLE_PERF_CONSUMER_GROUP_ID
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: group-id
+        - name: THROTTABLE_PERF_CONSUMER_AUTO_OFFSET_RESET
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: auto-offset-reset
+        - name: THROTTABLE_PERF_CONSUMER_THROTTLE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: throttle
+        - name: THROTTABLE_PERF_CONSUMER_THROTTLE_PER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: throttle-per
+        - name: THROTTABLE_PERF_CONSUMER_THROTTLE_BURST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: throttle-burst
+        - name: THROTTABLE_PERF_CONSUMER_LOG_PER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: log-per
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+{{if .Values.jmxfetch.enabled}}
+      - name: collocated-proxy
+        image: "{{if .Values.collocatedProxy.image.registry}}{{.Values.collocatedProxy.image.registry}}/{{end}}{{.Values.collocatedProxy.image.repository}}:{{.Values.collocatedProxy.image.tag}}"
+        imagePullPolicy: {{.Values.collocatedProxy.image.pullPolicy}}
+        ports:
+        - containerPort: {{.Values.collocatedProxy.port}}
+          protocol: UDP
+        env:
+        - name: PORT
+          value: {{.Values.collocatedProxy.port | quote}}
+        - name: SELECTOR
+          value: "{{.Values.collocatedProxy.selector}}"
+        - name: PROTOCOL
+          value: udp
+        - name: NAMESPACE
+          value: {{.Values.collocatedProxy.namespace}}
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      - name: jmxfetcher
+        image: "{{if .Values.jmxfetch.image.registry}}{{.Values.jmxfetch.image.registry}}/{{end}}{{.Values.jmxfetch.image.repository}}:{{.Values.jmxfetch.image.tag}}"
+        imagePullPolicy: {{.Values.jmxfetch.image.pullPolicy}}
+        volumeMounts:
+        - mountPath: /conf.d
+          name: config-volume
+        env:
+        - name: DD_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: datadog.api.key
+{{end}}

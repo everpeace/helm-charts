@@ -4,7 +4,7 @@
 replicaCount: 1
 image:
   repository: everpeace/throttlable-perf-consumer
-  tag: 0.1.3
+  tag: 0.2.0
   pullPolicy: IfNotPresent
 resources:
   # limits:
@@ -22,6 +22,8 @@ config:
   throttle-per: "1s"
   throttle-burst: "1"
   log-per: "100"
+  offset-commit-batch-size: "20"
+  offset-commit-parallelism: "3"
   jvm-heap-min: "1024m"
   jvm-heap-max: "1024m"
   jvm-meta-max: "512m"

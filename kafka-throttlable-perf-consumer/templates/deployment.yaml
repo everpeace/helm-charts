@@ -91,6 +91,16 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}
               key: log-per
+        - name: THROTTABLE_PERF_CONSUMER_OFFSET_COMMIT_BATCH_SIZE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: offset-commit-batch-size
+        - name: THROTTABLE_PERF_CONSUMER_OFFSET_COMMIT_PARALLELISM
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}
+              key: offset-commit-parallelism
         resources:
 {{ toYaml .Values.resources | indent 10 }}
 {{if .Values.jmxfetch.enabled}}

@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   burrow:
   - apiVersion: v1
-    created: 2017-08-22T14:23:25.236262449+09:00
+    created: 2017-10-19T02:45:40.773408563+09:00
     description: A Helm chart for burrow
     digest: 04f798faf7110056a5f54584d8961fab4997da2b93dd6b99d3c2be6781ba18c3
     name: burrow
@@ -10,7 +10,7 @@ entries:
     - https://everpeace.github.io/helm-charts/burrow-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
-    created: 2017-08-22T14:23:25.235182293+09:00
+    created: 2017-10-19T02:45:40.772317219+09:00
     description: A Helm chart for burrow
     digest: 2d33fdb349983906796c47945a379a091a2aead671bbcf272c6298b84e900b0f
     name: burrow
@@ -19,7 +19,7 @@ entries:
     version: 0.1.0
   kafka-consumer-perf-test:
   - apiVersion: v1
-    created: 2017-08-22T14:23:25.237285755+09:00
+    created: 2017-10-19T02:45:40.774422919+09:00
     description: A Helm chart for kafka-consumer-perf-test
     digest: 6956b25153c8363d96e7cf90bd5754217a336f5e3e41587887ce7719c504ba26
     name: kafka-consumer-perf-test
@@ -28,7 +28,7 @@ entries:
     version: 0.1.0
   kafka-producer-perf-test:
   - apiVersion: v1
-    created: 2017-08-22T14:23:25.237975559+09:00
+    created: 2017-10-19T02:45:40.775430837+09:00
     description: A Helm chart for kafka-producer-perf-test
     digest: 285e7aa85fe62978f8cb8d3d600fdba6ddbc0ae27f388036c44ec9f7a341478e
     name: kafka-producer-perf-test
@@ -37,7 +37,7 @@ entries:
     version: 0.1.0
   kafka-throttlable-perf-consumer:
   - apiVersion: v1
-    created: 2017-08-22T14:23:25.241723688+09:00
+    created: 2017-10-19T02:45:40.785014087+09:00
     description: A Helm chart for kafka-throttlable-perf-consumer
     digest: 6415804e7c57794df37939f568244649454365778c8b1d69a12541e1f30cd388
     name: kafka-throttlable-perf-consumer
@@ -45,11 +45,20 @@ entries:
     - https://everpeace.github.io/helm-charts/kafka-throttlable-perf-consumer-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v1
-    created: 2017-08-22T14:23:25.240383283+09:00
+    created: 2017-10-19T02:45:40.783524422+09:00
     description: A Helm chart for kafka-throttlable-perf-consumer
     digest: 703ff6d7dad6659d356801fd6541f16b6d7a060eea3410546c088a923d3b11c7
     name: kafka-throttlable-perf-consumer
     urls:
     - https://everpeace.github.io/helm-charts/kafka-throttlable-perf-consumer-0.1.0.tgz
     version: 0.1.0
-generated: 2017-08-22T14:23:25.232435314+09:00
+  localstack:
+  - apiVersion: v1
+    created: 2017-10-19T02:45:40.78624342+09:00
+    description: A Helm chart for localstack
+    digest: e9ca2712ce0fb3d2e550a8539b45f6c3cf3621885c690db04a4a90bb547ac068
+    name: localstack
+    urls:
+    - https://everpeace.github.io/helm-charts/localstack-0.1.0.tgz
+    version: 0.1.0
+generated: 2017-10-19T02:45:40.769768059+09:00

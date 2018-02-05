@@ -35,6 +35,10 @@ spec:
           path: /sys/fs/cgroup
         name: cgroups
 {{end}}
+      affinity:
+{{- if .Values.additionalAffinities }}
+{{ toYaml .Values.additionalAffinities | indent 8 }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

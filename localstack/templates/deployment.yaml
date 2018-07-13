@@ -24,6 +24,8 @@ spec:
             - containerPort: {{ $val.internalPort }}
           {{- end }}
           env:
+            - name: USE_SSL
+              value: !!string {{ .Values.localstack.useSsl }}
             - name: SERVICES
               value: "{{- range $index, $val := .Values.service.activeLocalStackServices -}}
                       {{- if $index -}},{{- end -}}{{- $val.name -}}:{{- $val.internalPort -}}

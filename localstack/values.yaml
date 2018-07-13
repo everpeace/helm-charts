@@ -149,6 +149,7 @@ persistence:
   size: 20Gi
 
 localstack:
+  useSsl: "false"
   defaultRegion: "ap-northeast-1"
   #  default of hostExternal {{service.name}}.{{namespace deployed into}}
   #  hostExternal:
